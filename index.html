@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <script>
+            const radius = 6371000;
+
+            function parsePositionFromString(posString) {
+                const parts = posString.split(',');
+                return {
+                    lat: Number.parseFloat(parts[0]),
+                    lon: Number.parseFloat(parts[1])
+                }
+            }
+
+            function getVectorFromPosition(pos){
+                const WinkelO = Math.PI * (90 - pos.lat) / 180;
+                const winkelP = Math.PI * (180 - pos.lon) / 360;
+
+                return {
+                    x: radius * Math.sin(WinkelO) * Math.cos(winkelP),
+                    y: radius * Math.sin(WinkelO) * Math.sin(winkelP),
+                    z: radius * Math.cos(WinkelO)
+                }
+            }
+
+            function getDistanceVector(vectorA, vectorB) {
+                return {
+                    x: vectorA.x - vectorB.x,
+                    y: vectorA.y - vectorB.y,
+                    z: vectorA.z - vectorB.z
+                };
+            }
+
+            function getVectorLength(vector) {
+                const {x, y, z} = vector;
+                return Math.sqrt(x*x + y*y + z*z);
+            }
+
+            function getDistanceOnCircle(directDistance) {
+                const angle = 2 * Math.asin(0.5 * directDistance / radius);
+                return ( angle / (2 * Math.PI) ) * 2 * radius * Math.PI;
+            }
+
+            function calculateDistanceInMeter(pos1, pos2) {
+                const vector1 = getVectorFromPosition(pos1);
+                const vector2 = getVectorFromPosition(pos2);
+                const distanceVector = getDistanceVector(vector1,vector2);
+
+                const directDistance = getVectorLength(distanceVector);
+                const distance = getDistanceOnCircle(directDistance);
+
+                return distance / 1000;
+            }
+
+            const successFunction = (position) => {
+                const homePosition = parsePositionFromString(document.getElementById("homePosition").value);
+                const devicePosition = {
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude
+                };
+                const distance = calculateDistanceInMeter(homePosition, devicePosition);
+                window.alert(`Distance is ${distance.toFixed(1)}km.`);
+            }
+
+            const onClick =  () => {
+                navigator.geolocation.getCurrentPosition(function(position){
+                    successFunction(position),
+                    window.alert('Please give required location permission!'),
+                    {
+                        timeout: 0,
+                        enableHighAccuracy: true,
+                        maximumAge: Infinity
+                    }
+                });
+            }
+        </script>
+
+        <h1>How far is home?</h1>
+        <p>Please type in your home address gps coords and click on "Get Distance".</p>
+
+        <input id="homePosition" value="51.344766, 12.380842"/>
+
+        <button onclick="onClick()">Get Distance.</button>
+
+    </body>
+</html>

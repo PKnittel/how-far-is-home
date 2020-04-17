@@ -47,7 +47,7 @@
 
             function getVectorFromPosition(pos){
                 const WinkelO = Math.PI * (90 - pos.lat) / 180;
-                const winkelP = Math.PI * (180 - pos.lon) / 360;
+                const winkelP = 2 * Math.PI * (180 - pos.lon) / 360;
 
                 return {
                     x: radius * Math.sin(WinkelO) * Math.cos(winkelP),
@@ -80,6 +80,7 @@
                 const distanceVector = getDistanceVector(vector1,vector2);
 
                 const directDistance = getVectorLength(distanceVector);
+                console.log(directDistance);
                 const distance = getDistanceOnCircle(directDistance);
 
                 return distance / 1000;

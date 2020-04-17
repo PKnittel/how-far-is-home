@@ -18,6 +18,7 @@
                     button.innerHTML = element['display_name'];
                     button.onclick = useCoords.bind(this, element.lat, element.lon);
                     node.appendChild(button);
+                    node.appendChild(document.createElement("BR"))
                 });
             }
 

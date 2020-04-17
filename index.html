@@ -7,9 +7,9 @@
             }
 
             function clearChildren(node) {
-                node.childNodes.forEach(element => {
-                    node.removeChild(element);
-                });
+                while (node.childNodes.length >0) {
+                    node.removeChild(node.firstChild);
+                }
             }
 
             function renderList(node, list) {
@@ -23,7 +23,7 @@
 
             function fetchAddress() {
                 const query = document.getElementById("addressName").value;
-                const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json`;
+                const url = encodeURI(`https://nominatim.openstreetmap.org/search?q=${query}&format=json`);
                 fetch(url).then((response) => {
                     return response.json();
                 })

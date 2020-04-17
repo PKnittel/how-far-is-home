@@ -2,6 +2,39 @@
 <html>
     <body>
         <script>
+            function useCoords(lat, lon) {
+                document.getElementById("homePosition").value = `${lat}, ${lon}`;
+            }
+
+            function clearChildren(node) {
+                node.childNodes.forEach(element => {
+                    node.removeChild(element);
+                });
+            }
+
+            function renderList(node, list) {
+                list.forEach((element) => {
+                    const button = document.createElement("BUTTON");
+                    button.innerHTML = element['display_name'];
+                    button.onclick = useCoords.bind(this, element.lat, element.lon);
+                    node.appendChild(button);
+                });
+            }
+
+            function fetchAddress() {
+                const query = document.getElementById("addressName").value;
+                const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json`;
+                fetch(url).then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    const node = document.getElementById("possibleAddresses");
+                    console.log(data);
+                    clearChildren(node);
+                    renderList(node, data);
+                });
+            }
+
             const radius = 6371000;
 
             function parsePositionFromString(posString) {
@@ -53,34 +86,70 @@
             }
 
             const successFunction = (position) => {
+                document.getElementById("currentPosition").innerHTML = `You are at point: ${position.coords.latitude}, ${position.coords.longitude}`;
                 const homePosition = parsePositionFromString(document.getElementById("homePosition").value);
                 const devicePosition = {
                     lat: position.coords.latitude,
                     lon: position.coords.longitude
                 };
                 const distance = calculateDistanceInMeter(homePosition, devicePosition);
-                window.alert(`Distance is ${distance.toFixed(1)}km.`);
+                document.getElementById("loadingSpinner").style.visibility = 'hidden';
+                document.getElementById("distanceText").innerHTML = `Distance is ${distance.toFixed(1)}km.`;
             }
 
             const onClick =  () => {
-                navigator.geolocation.getCurrentPosition(function(position){
-                    successFunction(position),
-                    window.alert('Please give required location permission!'),
+                document.getElementById("loadingSpinner").style.visibility = 'visible';
+                document.getElementById("distanceText").innerHTML = 'The distance is calculated.';
+
+                navigator.geolocation.watchPosition(
+                    successFunction,
+                    console.log,
                     {
-                        timeout: 0,
+                        timeout: 3000,
                         enableHighAccuracy: true,
                         maximumAge: Infinity
                     }
-                });
+                );
             }
         </script>
 
         <h1>How far is home?</h1>
         <p>Please type in your home address gps coords and click on "Get Distance".</p>
 
-        <input id="homePosition" value="51.344766, 12.380842"/>
+        <input id="addressName" value="Hbf. Leipzig"/>
+        <button onclick="fetchAddress()">Resolve Address.</button>
 
+        <br><br>
+        <div id="possibleAddresses">
+        </div>
+
+        <br><br>
+
+        <input id="homePosition" value="51.344766, 12.380842"/>
         <button onclick="onClick()">Get Distance.</button>
+
+        <div id="loadingSpinner" style="visibility:hidden">
+            <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="blue">
+                <g fill="none" fill-rule="evenodd">
+                    <g transform="translate(1 1)" stroke-width="2">
+                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
+                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                            <animateTransform
+                                attributeName="transform"
+                                type="rotate"
+                                from="0 18 18"
+                                to="360 18 18"
+                                dur="1s"
+                                repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </g>
+            </svg>
+            <!-- SVG Coryright:
+                The MIT License (MIT) Copyright (c) 2014 Sam Herbert  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: -->
+        </div>
+        <p id="currentPosition"></p>
+        <p id="distanceText"></p>
 
     </body>
 </html>

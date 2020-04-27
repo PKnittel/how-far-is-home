@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="style.css">
 <html>
     <body>
         <script>
@@ -115,43 +116,51 @@
             }
         </script>
 
-        <h1>How far is home?</h1>
-        <p>Please type in your home address gps coords and click on "Get Distance".</p>
+        <div class='headline'>
+            <h1>How far is home?</h1>
+            <p>Please type in your home address GPS coords<br>and click on "Get Distance".</p>
+        </div>
 
-        <input id="addressName" value="Hbf. Leipzig"/>
-        <button onclick="fetchAddress()">Resolve Address.</button>
+        <div>
+            <input id="addressName" value="Hbf. Leipzig"/>
+            <button onclick="fetchAddress()">Resolve Address.</button>
 
-        <br><br>
-        <div id="possibleAddresses">
+            <br><br>
+            <div id="possibleAddresses">
+            </div>
         </div>
 
         <br><br>
 
-        <input id="homePosition" value="51.344766, 12.380842"/>
-        <button onclick="onClick()">Get Distance.</button>
+        <div>
+            <input id="homePosition" value="51.344766, 12.380842"/>
+            <button onclick="onClick()">Get Distance.</button>
 
-        <div id="loadingSpinner" style="visibility:hidden">
-            <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="blue">
-                <g fill="none" fill-rule="evenodd">
-                    <g transform="translate(1 1)" stroke-width="2">
-                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
-                        <path d="M36 18c0-9.94-8.06-18-18-18">
-                            <animateTransform
-                                attributeName="transform"
-                                type="rotate"
-                                from="0 18 18"
-                                to="360 18 18"
-                                dur="1s"
-                                repeatCount="indefinite"/>
-                        </path>
+            <div id="loadingSpinner" style="visibility:hidden">
+                <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="blue">
+                    <g fill="none" fill-rule="evenodd">
+                        <g transform="translate(1 1)" stroke-width="2">
+                            <circle stroke-opacity=".5" cx="18" cy="18" r="18"/>
+                            <path d="M36 18c0-9.94-8.06-18-18-18">
+                                <animateTransform
+                                    attributeName="transform"
+                                    type="rotate"
+                                    from="0 18 18"
+                                    to="360 18 18"
+                                    dur="1s"
+                                    repeatCount="indefinite"/>
+                            </path>
+                        </g>
                     </g>
-                </g>
-            </svg>
-            <!-- SVG Coryright:
-                The MIT License (MIT) Copyright (c) 2014 Sam Herbert  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: -->
+                </svg>
+                <!-- SVG Coryright:
+                    The MIT License (MIT) Copyright (c) 2014 Sam Herbert  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: -->
+            </div>
         </div>
-        <p id="currentPosition"></p>
-        <p id="distanceText"></p>
+        <div>
+            <p id="currentPosition"></p>
+            <p id="distanceText"></p>
+        </div>
 
     </body>
 </html>

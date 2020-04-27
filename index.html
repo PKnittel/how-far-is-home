@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <link rel="stylesheet" type="text/css" href="style.css">
 <html>
-    <body>
+    <body onload="onLoad()">
         <script>
+            function onLoad() {
+                const query = localStorage.getItem('query');
+                if (query) {
+                    document.getElementById("addressName").value = query;
+                }
+
+                const position = localStorage.getItem('pos');
+                if (position) {
+                    const positionObject = parsePositionFromString(position);
+                    document.getElementById("homePosition").value = `${positionObject.lat}, ${positionObject.lon}`;
+                }
+            }
+
             function useCoords(lat, lon) {
+                localStorage.setItem('pos', `${lat}, ${lon}`);
                 document.getElementById("homePosition").value = `${lat}, ${lon}`;
             }
 
@@ -25,6 +39,7 @@
 
             function fetchAddress() {
                 const query = document.getElementById("addressName").value;
+                localStorage.setItem('query', query);
                 const url = encodeURI(`https://nominatim.openstreetmap.org/search?q=${query}&format=json`);
                 fetch(url).then((response) => {
                     return response.json();
@@ -89,7 +104,8 @@
             }
 
             const successFunction = (position) => {
-                document.getElementById("currentPosition").innerHTML = `You are at point: ${position.coords.latitude}, ${position.coords.longitude}`;
+                document.getElementById("currentPosition")
+                    .innerHTML = `You are at point: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
                 const homePosition = parsePositionFromString(document.getElementById("homePosition").value);
                 const devicePosition = {
                     lat: position.coords.latitude,
